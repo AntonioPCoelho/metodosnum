@@ -59,18 +59,11 @@
 
 
 
-(defun eval-expr (expr x)
-  "Evaluate a symbolic Lisp expression, substituting x with the numeric value."
-  (cond
-    ((numberp expr) expr) ; base case: number
-    ((symbolp expr) (if (eq expr 'x) x (error "Unknown symbol: ~a" expr)))
-    ((listp expr)
-     (let ((op (car expr))
-           (args (cdr expr)))
-       (case op
-         (+ (apply #'+ (mapcar (lambda (e) (eval-expr e x)) args)))
-         (- (apply #'- (mapcar (lambda (e) (eval-expr e x)) args)))
-         (* (apply #'* (mapcar (lambda (e) (eval-expr e x)) args)))
-         (/ (apply #'/ (mapcar (lambda (e) (eval-expr e x)) args)))
-         (t (error "Unknown operator: ~a" op)))))
-    (t (error "Invalid expression: ~a" expr))))
+(defun eval-at-x (expr x-value)
+  "Evaluate the Lisp expression EXPR after substituting x with x-value."
+  (eval (subst x-value 'x expr)))
+;(let* ((poly (lagrange-interpolating-polynomial '((2 3) (4 4) (5 5))))
+;       (value (eval-at-x poly 3.9)))
+;  (format t "P(x) = ~a~%" value))
+;
+;
